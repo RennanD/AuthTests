@@ -4,11 +4,10 @@ module.exports = {
   password: 'masterkey',
   database: 'nodeauth',
   dialect: 'postgres',
-  operatorsAliases: false,
   logging: false,
-  difine: {
+  define: {
     timestamps: true,
-    underscord: true,
-    underscordAll: true
+    underscored: true,
+    underscoredAll: true
   }
 }

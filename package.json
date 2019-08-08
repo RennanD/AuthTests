@@ -1,14 +1,22 @@
 {
-  "name": "JestTests",
+  "name": "jest-test",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
     "express": "^4.17.1",
+    "i": "^0.3.6",
     "pg": "^7.12.0",
     "sequelize": "^5.12.3"
   },
   "devDependencies": {
+    "jest": "^24.8.0",
+    "nodemon": "^1.19.1",
     "sequelize-cli": "^5.5.0"
+  },
+  "scripts": {
+    "dev": "nodemon src/server.js --ignore __tests__",
+    "start": "node src/server.js",
+    "test": "jest"
   }
 }
