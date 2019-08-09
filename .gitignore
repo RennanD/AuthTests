@@ -1,1 +1,9 @@
+__tests__/database.sqlite
 node_modules
+src/migrations/!.gitkeep
+src/migrations/*
+.env
+.env.test.
+
+
+
