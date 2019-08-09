@@ -1,7 +1,7 @@
 const request = require('supertest')
 
 const app = require('../../src/app')
-const { User } = require('../../src/models')
+const factory = require('../factories')
 const truncate = require('../utils/truncate')
 
 describe('Authenticate', () => {
@@ -10,10 +10,8 @@ describe('Authenticate', () => {
     })
 
     it('should authenticate with valid credentials',async () => {
-        const user = await User.create({
-            name: 'Rennan',
-            email: 'rennan@teste.com',
-            password:'123123'
+        const user = await factory.create('User',{
+            password: '123123'
         })
         const response = await request(app)
             .post('/session')
@@ -26,11 +24,10 @@ describe('Authenticate', () => {
     })
 
     it('should not authneticate with invalid credentials', async () => {
-        const user = await User.create({
-            name: 'Rennan',
-            email: 'rennan@teste.com',
-            password:'123123'
+        const user = await factory.create('User',{
+            password: '123123'
         })
+
         const response = await request(app)
             .post('/session')
             .send({
@@ -42,10 +39,8 @@ describe('Authenticate', () => {
     })
 
     it('should return JWT token when authenticate', async () => {
-        const user = await User.create({
-            name: 'Rennan',
-            email: 'rennan@teste.com',
-            password:'123123'
+        const user = await factory.create('User',{
+            password: '123123'
         })
         const response = await request(app)
             .post('/session')
@@ -57,17 +52,38 @@ describe('Authenticate', () => {
         expect(response.body).toHaveProperty('token')
     })
 
-    it('should be able to access private routes when authenticate', async () => {
-        const user = await User.create({
-            name: 'Rennan',
-            email: 'rennan@teste.com',
-            password:'123123'
+    it('should be able to access private routes when autheinticate', async () => {
+        const user = await factory.create('User',{
+            password: '123123'
         })
         const response = await request(app)
-            .get('/dashboard')
-            // .set('Authorization', `Bearer ${}`)
+            .get('/dash')
+            .set('Authorization', `Bearer ${user.generateToken()}`)
 
-        expect(response.body).toHaveProperty('token')
+        expect(response.status).toBe(200)
     })
+
+    it('should not be able to access private routes without token', async () => {
+        const user = await factory.create('User',{
+            password: '12312'
+        })
+        const response = await request(app)
+            .get('/dash')
+
+        expect(response.status).toBe(401)
+    })
+
+    it('should not be able to access private routes with invalid token', async () => {
+        const user = await factory.create('User',{
+            password: '123123'
+        })
+        const response = await request(app)
+            .get('/dash')
+            .set('Authorization', `Bearer 1234`)
+
+        expect(response.status).toBe(401)
+    })
+
+    
 })
 

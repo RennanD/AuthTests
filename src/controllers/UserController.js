@@ -2,6 +2,11 @@ const  { User } = require('../models')
 
 
 class UserController {
+
+    async index(req, res){
+        return res.status(200).send('ok')
+    }
+
     async store(req, res){
         const { email, password} = req.body
 
@@ -15,7 +20,10 @@ class UserController {
             return res.status(401).json({error: 'Invalid password'})
         }
 
-        return res.json({ user })
+        return res.json({ 
+            user,
+            token: user.generateToken() 
+        })
     }
 }
 
